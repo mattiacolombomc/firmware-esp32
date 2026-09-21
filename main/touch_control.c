@@ -171,11 +171,15 @@ touch_event_t touch_control_check(void) {
         } else if (g_touch.is_late_tap) {
           g_touch.state = STATE_IDLE;
         } else if (duration >= MIN_TAP_DURATION_MS) {
-          // Feedback on release: TOUCH_EVENT_TAP only fires once the
-          // double-tap window has expired, too late to feel responsive
-          touch_feedback(BEEP_TAP);
-          g_touch.release_time = now;
-          g_touch.state = STATE_WAIT_FOR_DOUBLE_TAP;
+          // Double tap has no action, so a tap fires on release instead of
+          // waiting out the double-tap window: half a second of nothing reads
+          // as a dead button, and a second tap then cancelled the first.
+          g_touch.state = STATE_IDLE;
+          if (now - g_touch.last_event_time >= g_touch.debounce_ms) {
+            event = TOUCH_EVENT_TAP;
+            touch_feedback(BEEP_TAP);
+            g_touch.last_event_time = now;
+          }
         } else {
           g_touch.state = STATE_IDLE;
         }
