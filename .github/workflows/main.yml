@@ -22,16 +22,8 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - tidbyt-gen1
-          - tidbyt-gen1_swap
+          # fork: only the board this branch is for
           - tidbyt-gen2
-          - tronbyt-s3
-          - tronbyt-s3-wide
-          - pixoticker
-          - matrixportal-s3
-          - matrixportal-s3-square
-          - matrixportal-s3-waveshare
-          - waveshare-s3
 
     env:
       IDF_CCACHE_ENABLE: "1"
